@@ -54,11 +54,14 @@ df = df.rename(columns={"Energy Source & Energy Conversion Technology 1 - Regist
 pv_df = df[df["Energy Source 1"] == "PV"].copy()
 pv_df = pv_df[pv_df["Connection Status"] == "CONNECTED"].copy()
 pv_df['POC Voltage (kV)'] = pd.to_numeric(pv_df['POC Voltage (kV)'], errors='coerce').fillna(-1)
+
+# Filter for low voltage connected only (not need of size filter)
 pv_df = pv_df[(pv_df['POC Voltage (kV)'] > 0) & (pv_df['POC Voltage (kV)'] <= 1)]
+# pv_df = pv_df[(pv_df['capacity']<0.1)]
 
 # Create Densitymapbox heatmap for PV
 pv_trace = go.Densitymapbox(lat=pv_df['lat'], lon=pv_df['long'], z=pv_df['capacity'],
-                             radius=25, colorscale="rainbow", opacity=0.7)
+                             radius=30, colorscale="rainbow", opacity=0.7)
 
 # Add the PV trace to the figure
 fig.add_trace(pv_trace)
